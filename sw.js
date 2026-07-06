@@ -1,4 +1,4 @@
-const CACHE = 'diario-enxaqueca-v1';
+const CACHE = 'diario-enxaqueca-v2';
 const STATIC = [
   '/',
   '/index.html',

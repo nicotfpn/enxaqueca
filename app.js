@@ -5,10 +5,10 @@
   const PIN_KEY = 'de_pin';
 
   const INTENSITY_COLORS = {
-    1: '#1b5e20', 2: '#2e7d32', 3: '#388e3c',
-    4: '#f9a825', 5: '#f57f17', 6: '#e65100',
-    7: '#d84315', 8: '#bf360c',
-    9: '#c62828', 10: '#b71c1c'
+    1: '#4F7259', 2: '#5C8267', 3: '#84AC82',
+    4: '#D3B15E', 5: '#D0A050', 6: '#D0813F',
+    7: '#C9713F', 8: '#BD5F4A',
+    9: '#B24F55', 10: '#8F3E48'
   };
 
   const INTENSITY_LABELS = [
@@ -49,10 +49,10 @@
 
   function getIntensityHex(v) {
     const map = [
-      null, '#1b5e20', '#2e7d32', '#388e3c',
-      '#f9a825', '#f57f17', '#e65100',
-      '#d84315', '#bf360c',
-      '#c62828', '#b71c1c'
+      null, '#4F7259', '#5C8267', '#84AC82',
+      '#D3B15E', '#D0A050', '#D0813F',
+      '#C9713F', '#BD5F4A',
+      '#B24F55', '#8F3E48'
     ];
     return map[v] || null;
   }
