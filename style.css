@@ -123,6 +123,8 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; }
 .calendar-day.has-crisis { color: #fff; font-weight: 700; }
 .calendar-day .day-num { position: relative; z-index: 1; }
 .calendar-loading { text-align: center; padding: 24px; color: var(--text2); font-size: 14px; }
+.calendar-footer { display: flex; justify-content: center; padding: 32px 0 16px; opacity: 0.35; }
+.footer-poke { width: 64px; height: auto; image-rendering: auto; }
 
 /* ====== FAB ====== */
 .fab {

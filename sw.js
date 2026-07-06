@@ -7,7 +7,8 @@ const STATIC = [
   '/manifest.json',
   '/offline.html',
   '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  '/icons/icon-512.svg',
+  '/sprigatito.png'
 ];
 
 self.addEventListener('install', event => {
