@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="description" content="Diário de Enxaqueca - Acompanhe suas crises">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.svg">
+  <title>Diário de Enxaqueca</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="pin-screen" class="screen active">
+      <div class="pin-container">
+        <div class="pin-logo">
+          <svg width="64" height="64" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="#5b8def"/><circle cx="96" cy="88" r="56" fill="#1a1a2e"/><path d="M68 88 Q80 72 96 78 Q112 72 124 88 Q128 96 120 108 Q108 128 96 130 Q84 128 72 108 Q64 96 68 88Z" fill="#5b8def"/><circle cx="86" cy="90" r="5" fill="#1a1a2e"/><circle cx="106" cy="90" r="5" fill="#1a1a2e"/><path d="M86 104 Q96 112 106 104" fill="none" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/></svg>
+        </div>
+        <h1>Diário de Enxaqueca</h1>
+        <p class="pin-subtitle" id="pin-subtitle">Digite seu PIN de 4 dígitos</p>
+        <div class="pin-inputs">
+          <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="pin-digit" id="pin-0" autocomplete="off">
+          <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="pin-digit" id="pin-1" autocomplete="off">
+          <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="pin-digit" id="pin-2" autocomplete="off">
+          <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="pin-digit" id="pin-3" autocomplete="off">
+        </div>
+        <p class="pin-error" id="pin-error"></p>
+        <p class="pin-info" id="pin-info"></p>
+        <button class="btn-primary" id="pin-submit" disabled>Acessar</button>
+      </div>
+    </div>
+
+    <div id="main-screen" class="screen">
+      <header class="top-bar">
+        <h2 class="top-bar-title">Diário de Enxaqueca</h2>
+      </header>
+
+      <div class="calendar-container">
+        <header class="calendar-nav">
+          <button class="nav-btn" id="prev-month" aria-label="Mês anterior">‹</button>
+          <h3 id="month-title">---</h3>
+          <button class="nav-btn" id="next-month" aria-label="Próximo mês">›</button>
+        </header>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-color" style="background:#2e7d32"></span>Leve</span>
+          <span class="legend-item"><span class="legend-color" style="background:#f9a825"></span>Moderada</span>
+          <span class="legend-item"><span class="legend-color" style="background:#e65100"></span>Forte</span>
+          <span class="legend-item"><span class="legend-color" style="background:#c62828"></span>Muito forte</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div class="calendar-loading" id="calendar-loading">Carregando...</div>
+      </div>
+
+      <button class="fab" id="fab-today" aria-label="Registrar crise de hoje">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+
+    <div id="form-screen" class="screen overlay">
+      <div class="modal">
+        <header class="modal-header">
+          <h3 id="form-title">Nova Crise</h3>
+          <button class="close-btn" id="form-close" aria-label="Fechar">✕</button>
+        </header>
+        <form id="crisis-form" class="form-body" novalidate>
+          <div class="form-group">
+            <label for="form-date">Data</label>
+            <input type="date" id="form-date" required>
+          </div>
+          <div class="form-group">
+            <label>Intensidade da dor <span class="intensity-value" id="intensity-value">5</span></label>
+            <div class="intensity-slider-container">
+              <input type="range" id="form-intensity" min="0" max="10" value="5" step="1">
+              <div class="intensity-track">
+                <div class="intensity-fill" id="intensity-fill" style="width:50%"></div>
+              </div>
+            </div>
+            <div class="intensity-labels">
+              <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+            </div>
+            <p class="intensity-desc" id="intensity-desc">Moderada</p>
+          </div>
+          <div class="form-group">
+            <label for="form-time">Horário de início</label>
+            <input type="time" id="form-time" required>
+          </div>
+          <div class="form-group">
+            <label class="check-label">
+              <input type="checkbox" id="form-medication">
+              <span class="check-box"></span>
+              Tomou medicamento?
+            </label>
+            <div id="medication-detail" class="conditional hidden">
+              <label for="medicines-container">Qual(is) medicamento(s)?</label>
+              <div id="medicines-container">
+                <div class="medicine-row">
+                  <input type="text" class="medicine-input" placeholder="Ex: Dipirona 1g">
+                </div>
+              </div>
+              <button type="button" class="btn-small" id="add-medicine">+ Adicionar outro</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="check-label">
+              <input type="checkbox" id="form-hospital">
+              <span class="check-box"></span>
+              Foi ao hospital?
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="check-label">
+              <input type="checkbox" id="form-trigger">
+              <span class="check-box"></span>
+              Teve gatilho identificado?
+            </label>
+            <div id="trigger-detail" class="conditional hidden">
+              <label for="form-trigger-desc">Descreva o gatilho</label>
+              <input type="text" id="form-trigger-desc" placeholder="Ex: estresse, jejum, noite mal dormida">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary btn-full" id="form-save">Salvar</button>
+            <button type="button" class="btn-secondary btn-full" id="form-cancel">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="detail-screen" class="screen overlay">
+      <div class="modal">
+        <header class="modal-header">
+          <h3 id="detail-title">Crise</h3>
+          <button class="close-btn" id="detail-close" aria-label="Fechar">✕</button>
+        </header>
+        <div class="detail-body" id="detail-body"></div>
+        <div class="detail-actions">
+          <button class="btn-primary btn-full" id="detail-edit">Editar</button>
+          <button class="btn-danger btn-full" id="detail-delete">Apagar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
