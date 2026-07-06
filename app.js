@@ -2,7 +2,7 @@
   'use strict';
 
   const API = '/api';
-  const PIN_KEY = 'de_pin';
+  const USER_ID = 'default';
 
   const INTENSITY_COLORS = {
     1: '#4F7259', 2: '#5C8267', 3: '#84AC82',
@@ -25,7 +25,6 @@
   const DAY_NAMES = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   const state = {
-    pin: null,
     year: 0,
     month: 0,
     crises: {},
@@ -92,75 +91,6 @@
     $(id).classList.add('active');
   }
 
-  /* ---------- PIN ---------- */
-  function setupPinScreen() {
-    const inputs = [0, 1, 2, 3].map(i => $(`pin-${i}`));
-    const submitBtn = $('pin-submit');
-    const errorEl = $('pin-error');
-    const infoEl = $('pin-info');
-
-    function getPin() { return inputs.map(i => i.value).join(''); }
-
-    function clearError() { errorEl.textContent = ''; }
-
-    inputs.forEach((input, idx) => {
-      input.addEventListener('input', () => {
-        input.value = input.value.replace(/\D/g, '').slice(0, 1);
-        input.classList.toggle('filled', input.value !== '');
-        clearError();
-        const pin = getPin();
-        submitBtn.disabled = pin.length !== 4;
-        if (pin.length === 4 && idx < 3) {
-          inputs[idx + 1].focus();
-        }
-      });
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && input.value === '' && idx > 0) {
-          inputs[idx - 1].focus();
-        }
-        if (e.key === 'Enter' && getPin().length === 4) {
-          submitBtn.click();
-        }
-      });
-      input.addEventListener('focus', () => input.select());
-    });
-
-    submitBtn.addEventListener('click', async () => {
-      const pin = getPin();
-      if (pin.length !== 4) return;
-      submitBtn.disabled = true;
-      errorEl.textContent = '';
-      infoEl.textContent = 'Verificando...';
-
-      try {
-        const res = await fetch(apiURL('/pin'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pin })
-        });
-        const data = await res.json();
-        if (!data.ok) {
-          errorEl.textContent = data.error || 'Erro ao verificar PIN';
-          submitBtn.disabled = false;
-          infoEl.textContent = '';
-          return;
-        }
-        if (data.action === 'created') {
-          infoEl.textContent = 'PIN criado com sucesso!';
-        }
-        localStorage.setItem(PIN_KEY, pin);
-        state.pin = pin;
-        infoEl.textContent = '';
-        submitBtn.disabled = false;
-        initApp();
-      } catch (e) {
-        errorEl.textContent = 'Erro de conexão. Verifique sua internet.';
-        submitBtn.disabled = false;
-        infoEl.textContent = '';
-      }
-    });
-  }
-
   /* ---------- API calls ---------- */
   async function api(method, path, body) {
     const opts = {
@@ -175,17 +105,17 @@
   }
 
   async function fetchMonth(year, month) {
-    const prefix = `/crises/${state.pin}/month`;
+    const prefix = `/crises/${USER_ID}/month`;
     const qs = `year=${year}&month=${month + 1}`;
     return api('GET', prefix + '?' + qs);
   }
 
   async function saveCrisis(date, data) {
-    return api('PUT', `/crises/${state.pin}/${date}`, data);
+    return api('PUT', `/crises/${USER_ID}/${date}`, data);
   }
 
   async function deleteCrisis(date) {
-    return api('DELETE', `/crises/${state.pin}/${date}`);
+    return api('DELETE', `/crises/${USER_ID}/${date}`);
   }
 
   /* ---------- calendar ---------- */
@@ -419,7 +349,7 @@
     const title = $('detail-title');
 
     try {
-      const crisis = state.crises[dateStr] || await api('GET', `/crises/${state.pin}/${dateStr}`);
+      const crisis = state.crises[dateStr] || await api('GET', `/crises/${USER_ID}/${dateStr}`);
       if (!crisis) { showToast('Registro não encontrado'); return; }
 
       const d = crisis.data || dateStr;
@@ -522,44 +452,16 @@
     renderCalendar();
   }
 
-  async function boot() {
-    const savedPin = localStorage.getItem(PIN_KEY);
-    if (savedPin) {
-      // verify PIN still exists server-side
-      try {
-        const res = await fetch(apiURL('/pin'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pin: savedPin })
-        });
-        const data = await res.json();
-        if (data.ok) {
-          state.pin = savedPin;
-          initApp();
-          return;
-        }
-      } catch (e) {
-        // offline — assume still valid
-        state.pin = savedPin;
-        initApp();
-        return;
-      }
-    }
-    // no PIN saved
-    showScreen('pin-screen');
-  }
-
   /* ---------- register SW ---------- */
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
 
   /* ---------- setup & go ---------- */
-  setupPinScreen();
   setupForm();
   setupDetail();
   setupFAB();
   setupNav();
-  boot();
+  initApp();
 
 })();

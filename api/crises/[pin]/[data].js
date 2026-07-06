@@ -1,19 +1,16 @@
 import { kv } from '@vercel/kv';
 
+const USER_ID = 'default';
+
 export default async function handler(req, res) {
   try {
-    const { pin, data } = req.query;
+    const { data } = req.query;
 
-    if (!pin || !data || !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+    if (!data || !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
       return res.status(400).json({ error: 'Parâmetros inválidos' });
     }
 
-    const pinExists = await kv.exists(`pin:${pin}`);
-    if (!pinExists) {
-      return res.status(401).json({ error: 'PIN inválido' });
-    }
-
-    const key = `crises:${pin}:${data}`;
+    const key = `crises:${USER_ID}:${data}`;
 
     switch (req.method) {
       case 'GET': {

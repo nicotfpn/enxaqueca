@@ -1,20 +1,17 @@
 import { kv } from '@vercel/kv';
 
+const USER_ID = 'default';
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { pin, year, month } = req.query;
-
-    const pinExists = await kv.exists(`pin:${pin}`);
-    if (!pinExists) {
-      return res.status(401).json({ error: 'PIN inválido' });
-    }
+    const { year, month } = req.query;
 
     const monthStr = `${year}-${String(month).padStart(2, '0')}`;
-    const pattern = `crises:${pin}:${monthStr}-*`;
+    const pattern = `crises:${USER_ID}:${monthStr}-*`;
 
     let cursor = 0;
     const crises = {};
