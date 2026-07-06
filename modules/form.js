@@ -80,6 +80,32 @@ function updateIntensityDisplay(val) {
   fill.style.width = pct + '%';
   const color = getIntensityHex(v);
   if (color) fill.style.background = color;
+  updateTicks(v);
+}
+
+function updateTicks(v) {
+  const container = $('intensity-track-ticks');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i <= 10; i++) {
+    const tick = document.createElement('div');
+    tick.className = 'tick' + (i <= v ? ' highlight' : '');
+    container.appendChild(tick);
+  }
+}
+
+function initIntensitySlider() {
+  const track = $('intensity-track');
+  const input = $('form-intensity');
+  updateTicks(parseInt(input.value, 10));
+  track.addEventListener('click', e => {
+    const rect = track.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const v = Math.round(x * 10);
+    input.value = Math.max(0, Math.min(10, v));
+    updateIntensityDisplay(input.value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
 }
 
 export function closeForm() {
@@ -88,6 +114,8 @@ export function closeForm() {
 }
 
 export function setupForm() {
+  initIntensitySlider();
+
   $('form-intensity').addEventListener('input', function () {
     updateIntensityDisplay(this.value);
   });

@@ -29,6 +29,8 @@
 }
 
 html, body { height: 100%; height: 100dvh; overflow: hidden; }
+body::-webkit-scrollbar, .screen::-webkit-scrollbar, *::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
 
 body {
   font-family: var(--font-body);
@@ -197,10 +199,14 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; touch-a
 .chip.selected { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
 
 /* Intensity slider */
-.intensity-slider-container { position: relative; padding: 8px 0; }
-.intensity-track { height: 8px; background: var(--border); border-radius: 4px; position: relative; overflow: hidden; }
-.intensity-fill { height: 100%; border-radius: 4px; transition: width 0.1s, background 0.2s; }
-#form-intensity { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; -webkit-appearance: none; margin: 0; }
+.intensity-slider-container { position: relative; padding: 12px 0 4px; }
+.intensity-track { height: 8px; background: var(--border); border-radius: 4px; position: relative; overflow: visible; cursor: pointer; }
+.intensity-fill { height: 100%; border-radius: 4px; transition: width 0.05s, background 0.2s; }
+.intensity-track-ticks { display: flex; position: absolute; top: -6px; left: 0; right: 0; height: 20px; pointer-events: none; }
+.intensity-track-ticks .tick { flex: 1; display: flex; align-items: center; justify-content: center; }
+.intensity-track-ticks .tick::after { content: ''; width: 2px; height: 10px; background: var(--text3); border-radius: 1px; opacity: 0.3; }
+.intensity-track-ticks .tick.highlight::after { opacity: 0.8; background: var(--primary); }
+#form-intensity { position: absolute; top: -12px; left: 0; width: 100%; height: 44px; opacity: 0; cursor: pointer; z-index: 2; -webkit-appearance: none; margin: 0; touch-action: none; }
 .intensity-labels { display: flex; justify-content: space-between; padding: 4px 0 0; font-size: 11px; color: var(--text3); }
 .intensity-desc { text-align: center; font-size: 14px; color: var(--text2); margin-top: 4px; font-weight: 500; }
 .intensity-value { color: var(--primary); font-weight: 700; }
