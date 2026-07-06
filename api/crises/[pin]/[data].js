@@ -1,5 +1,6 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 
+const redis = Redis.fromEnv();
 const USER_ID = 'default';
 
 export default async function handler(req, res) {
@@ -14,7 +15,7 @@ export default async function handler(req, res) {
 
     switch (req.method) {
       case 'GET': {
-        const crisis = await kv.get(key);
+        const crisis = await redis.get(key);
         if (!crisis) {
           return res.status(404).json({ error: 'Nenhum registro encontrado' });
         }
@@ -26,13 +27,19 @@ export default async function handler(req, res) {
         if (!body || typeof body.intensidade !== 'number') {
           return res.status(400).json({ error: 'Dados inválidos' });
         }
-        await kv.set(key, {
+        await redis.set(key, {
           data: body.data || data,
           intensidade: body.intensidade,
           hora_inicio: body.hora_inicio || '',
+          hora_fim: body.hora_fim || '',
+          em_andamento: !!body.em_andamento,
           tomou_medicamento: !!body.tomou_medicamento,
           medicamentos: Array.isArray(body.medicamentos) ? body.medicamentos : [],
+          eficacia: body.eficacia || '',
+          sintomas: Array.isArray(body.sintomas) ? body.sintomas : [],
+          piora_atividade: body.piora_atividade || '',
           foi_hospital: !!body.foi_hospital,
+          impacto_dia: !!body.impacto_dia,
           teve_gatilho: !!body.teve_gatilho,
           gatilho: body.gatilho || ''
         });
@@ -40,7 +47,7 @@ export default async function handler(req, res) {
       }
 
       case 'DELETE': {
-        await kv.del(key);
+        await redis.del(key);
         return res.status(200).json({ ok: true });
       }
 
@@ -48,7 +55,10 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (err) {
+    if (err.message?.includes('connect') || err.message?.includes('ECONNREFUSED') || err.message?.includes('fetch failed')) {
+      return res.status(503).json({ error: 'Banco de dados (Redis) não configurado. Conecte o Upstash Redis no dashboard da Vercel.' });
+    }
     console.error('Crisis error:', err);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    return res.status(500).json({ error: 'Erro interno ao processar crise' });
   }
 }

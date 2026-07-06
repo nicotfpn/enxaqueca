@@ -1,5 +1,6 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 
+const redis = Redis.fromEnv();
 const USER_ID = 'default';
 
 export default async function handler(req, res) {
@@ -17,11 +18,11 @@ export default async function handler(req, res) {
     const crises = {};
 
     do {
-      const [nextCursor, keys] = await kv.scan(cursor, { match: pattern, count: 100 });
-      cursor = nextCursor;
+      const [nextCursor, keys] = await redis.scan(cursor, { match: pattern, count: 100 });
+      cursor = Number(nextCursor);
 
       if (keys.length > 0) {
-        const values = await kv.mget(...keys);
+        const values = await redis.mget(...keys);
         for (let i = 0; i < keys.length; i++) {
           const date = keys[i].split(':')[2];
           crises[date] = values[i];
@@ -31,7 +32,10 @@ export default async function handler(req, res) {
 
     return res.status(200).json(crises);
   } catch (err) {
+    if (err.message?.includes('connect') || err.message?.includes('ECONNREFUSED') || err.message?.includes('fetch failed')) {
+      return res.status(503).json({ error: 'Banco de dados (Redis) não configurado. Conecte o Upstash Redis no dashboard da Vercel.' });
+    }
     console.error('Month error:', err);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    return res.status(500).json({ error: 'Erro interno ao buscar dados do mês' });
   }
 }

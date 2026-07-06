@@ -9,16 +9,26 @@
   <meta name="description" content="Diário de Enxaqueca - Acompanhe suas crises">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/icons/icon-192.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <title>Diário de Enxaqueca</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div id="app">
+
+    <!-- ====== ERROR BANNER ====== -->
+    <div id="error-banner" class="error-banner hidden">
+      <span id="error-msg"></span>
+      <button id="error-retry" class="error-retry">Tentar novamente</button>
+    </div>
+
+    <!-- ====== CALENDAR SCREEN ====== -->
     <div id="main-screen" class="screen active">
       <header class="top-bar">
+        <span class="top-bar-icon" id="btn-stats" tabindex="0" role="button" aria-label="Ver estatísticas">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
         <h2 class="top-bar-title">Diário de Enxaqueca</h2>
+        <span class="top-bar-icon" id="btn-stats-right" tabindex="0" role="button" aria-label="Ver estatísticas"></span>
       </header>
 
       <div class="calendar-container">
@@ -42,6 +52,7 @@
       </button>
     </div>
 
+    <!-- ====== FORM SCREEN ====== -->
     <div id="form-screen" class="screen overlay">
       <div class="modal">
         <header class="modal-header">
@@ -49,10 +60,12 @@
           <button class="close-btn" id="form-close" aria-label="Fechar">✕</button>
         </header>
         <form id="crisis-form" class="form-body" novalidate>
+
           <div class="form-group">
             <label for="form-date">Data</label>
             <input type="date" id="form-date" required>
           </div>
+
           <div class="form-group">
             <label>Intensidade da dor <span class="intensity-value" id="intensity-value">5</span></label>
             <div class="intensity-slider-container">
@@ -61,15 +74,49 @@
                 <div class="intensity-fill" id="intensity-fill" style="width:50%"></div>
               </div>
             </div>
-            <div class="intensity-labels">
-              <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-            </div>
+            <div class="intensity-labels"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
             <p class="intensity-desc" id="intensity-desc">Moderada</p>
           </div>
-          <div class="form-group">
-            <label for="form-time">Horário de início</label>
-            <input type="time" id="form-time" required>
+
+          <div class="form-row">
+            <div class="form-group form-group-half">
+              <label for="form-time">Início</label>
+              <input type="time" id="form-time" required>
+            </div>
+            <div class="form-group form-group-half">
+              <label for="form-end-time">Término</label>
+              <input type="time" id="form-end-time">
+            </div>
           </div>
+          <div class="form-group" style="margin-top:-12px">
+            <label class="check-label">
+              <input type="checkbox" id="form-still-ongoing">
+              <span class="check-box"></span>
+              Crise ainda em andamento
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Sintomas associados</label>
+            <div class="chips-group" id="symptoms-chips">
+              <button type="button" class="chip" data-value="nausea">Náusea</button>
+              <button type="button" class="chip" data-value="vomito">Vômito</button>
+              <button type="button" class="chip" data-value="fotofobia">Sensib. à luz</button>
+              <button type="button" class="chip" data-value="fonofobia">Sensib. ao som</button>
+              <button type="button" class="chip" data-value="aura">Aura</button>
+              <button type="button" class="chip" data-value="tontura">Tontura</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Piora com atividade física?</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="form-atividade" value="sim"><span class="radio-custom"></span> Sim</label>
+              <label class="radio-label"><input type="radio" name="form-atividade" value="nao" checked><span class="radio-custom"></span> Não</label>
+              <label class="radio-label"><input type="radio" name="form-atividade" value="n/a"><span class="radio-custom"></span> N/A</label>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="check-label">
               <input type="checkbox" id="form-medication">
@@ -84,8 +131,17 @@
                 </div>
               </div>
               <button type="button" class="btn-small" id="add-medicine">+ Adicionar outro</button>
+              <div class="form-group" style="margin-top:12px;margin-bottom:0">
+                <label>Eficácia</label>
+                <div class="radio-group">
+                  <label class="radio-label"><input type="radio" name="form-eficacia" value="funcionou"><span class="radio-custom"></span> Funcionou</label>
+                  <label class="radio-label"><input type="radio" name="form-eficacia" value="parcial"><span class="radio-custom"></span> Parcial</label>
+                  <label class="radio-label"><input type="radio" name="form-eficacia" value="nao_funcionou" checked><span class="radio-custom"></span> Não funcionou</label>
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="form-group">
             <label class="check-label">
               <input type="checkbox" id="form-hospital">
@@ -93,6 +149,15 @@
               Foi ao hospital?
             </label>
           </div>
+
+          <div class="form-group">
+            <label class="check-label">
+              <input type="checkbox" id="form-impacto">
+              <span class="check-box"></span>
+              Perdeu compromisso/trabalho?
+            </label>
+          </div>
+
           <div class="form-group">
             <label class="check-label">
               <input type="checkbox" id="form-trigger">
@@ -100,10 +165,13 @@
               Teve gatilho identificado?
             </label>
             <div id="trigger-detail" class="conditional hidden">
-              <label for="form-trigger-desc">Descreva o gatilho</label>
+              <label>Sugestões (toque para preencher)</label>
+              <div class="chips-group" id="trigger-chips"></div>
+              <label for="form-trigger-desc" style="margin-top:8px;display:block">Ou descreva o gatilho</label>
               <input type="text" id="form-trigger-desc" placeholder="Ex: estresse, jejum, noite mal dormida">
             </div>
           </div>
+
           <div class="form-actions">
             <button type="submit" class="btn-primary btn-full" id="form-save">Salvar</button>
             <button type="button" class="btn-secondary btn-full" id="form-cancel">Cancelar</button>
@@ -112,6 +180,7 @@
       </div>
     </div>
 
+    <!-- ====== DETAIL SCREEN ====== -->
     <div id="detail-screen" class="screen overlay">
       <div class="modal">
         <header class="modal-header">
@@ -122,6 +191,34 @@
         <div class="detail-actions">
           <button class="btn-primary btn-full" id="detail-edit">Editar</button>
           <button class="btn-danger btn-full" id="detail-delete">Apagar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== STATS SCREEN ====== -->
+    <div id="stats-screen" class="screen overlay">
+      <div class="modal modal-full">
+        <header class="modal-header">
+          <h3>Resumo do Mês</h3>
+          <button class="close-btn" id="stats-close" aria-label="Fechar">✕</button>
+        </header>
+        <div class="stats-body" id="stats-body">
+          <div class="stats-loading" id="stats-loading">Calculando...</div>
+          <div id="stats-content" class="stats-content hidden">
+            <div class="stats-cards" id="stats-cards"></div>
+            <div class="stats-chart-section">
+              <h4>Crises por intensidade</h4>
+              <div class="bar-chart" id="bar-chart-intensity"></div>
+            </div>
+            <div class="stats-chart-section">
+              <h4>Comparativo de meses</h4>
+              <div class="bar-chart" id="bar-chart-compare"></div>
+            </div>
+            <div class="stats-chart-section">
+              <h4>Uso de medicamentos (últimos 30 dias)</h4>
+              <div id="med-usage" class="med-usage"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
