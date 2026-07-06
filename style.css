@@ -147,14 +147,14 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; touch-a
 }
 .modal-full { max-height: 95vh; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px; flex-shrink: 0; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 8px; flex-shrink: 0; }
 .modal-header h3 { font-family: var(--font-display); font-size: 21px; font-weight: 600; }
 .close-btn { width: 44px; height: 44px; border: none; background: var(--surface2); color: var(--text); font-size: 18px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .close-btn:active { opacity: 0.7; }
 
 /* ====== FORM ====== */
-.form-body { padding: 0 20px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
-.form-group { margin-bottom: 20px; }
+.form-body { padding: 0 20px 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
+.form-group { margin-bottom: 12px; }
 .form-group > label { display: block; font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
 .form-group input[type="date"], .form-group input[type="time"], .form-group input[type="text"] {
   width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
@@ -167,7 +167,7 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; touch-a
 .form-row { display: flex; gap: 8px; }
 .form-row .form-group { flex: 1; margin-bottom: 0; }
 .form-row .form-group input[type="date"],
-.form-row .form-group input[type="time"] { padding: 10px 10px; }
+.form-row .form-group input[type="time"] { padding: 10px 8px; }
 
 /* Checkbox */
 .check-label { display: flex !important; align-items: center; gap: 10px; cursor: pointer; color: var(--text) !important; font-size: 16px !important; padding: 6px 0; }
@@ -205,12 +205,12 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; touch-a
 .intensity-value { color: var(--primary); font-weight: 700; }
 
 /* Conditional */
-.conditional { margin-top: 10px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); }
+.conditional { margin-top: 8px; padding: 10px; background: var(--bg); border-radius: var(--radius-sm); }
 .conditional.hidden { display: none; }
 .conditional > label { font-size: 13px !important; color: var(--text2) !important; margin-bottom: 8px !important; }
 .medicine-row { margin-bottom: 8px; }
 .medicine-row:last-child { margin-bottom: 0; }
-.medicine-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 16px; outline: none; }
+.medicine-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 16px; outline: none; }
 .medicine-input:focus { border-color: var(--primary); }
 .btn-small { display: inline-block; padding: 8px 16px; background: var(--surface2); color: var(--primary); border: 1px solid var(--primary); border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; margin-top: 8px; }
 .btn-small:active { opacity: 0.7; }
