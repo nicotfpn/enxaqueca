@@ -148,7 +148,7 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; }
 .close-btn:active { opacity: 0.7; }
 
 /* ====== FORM ====== */
-.form-body { padding: 0 20px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.form-body { padding: 0 20px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
 .form-group { margin-bottom: 20px; }
 .form-group > label { display: block; font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
 .form-group input[type="date"], .form-group input[type="time"], .form-group input[type="text"] {
@@ -220,7 +220,7 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; }
 .form-actions { padding-top: 8px; }
 
 /* ====== DETAIL ====== */
-.detail-body { padding: 0 20px 16px; overflow-y: auto; }
+.detail-body { padding: 0 20px 16px; overflow-y: auto; flex: 1; min-height: 0; }
 .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .detail-row:last-child { border-bottom: none; }
 .detail-label { font-size: 14px; color: var(--text2); }
@@ -232,7 +232,7 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; }
 .detail-chip { font-size: 12px; padding: 3px 10px; border-radius: 12px; background: var(--primary-soft); color: var(--primary); }
 
 /* ====== STATS ====== */
-.stats-body { padding: 0 20px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.stats-body { padding: 0 20px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
 .stats-loading { text-align: center; padding: 32px; color: var(--text2); font-size: 15px; }
 .stats-content { }
 .stats-content.hidden { display: none; }
