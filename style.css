@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@500;600;700;800&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
 :root {
   --bg: #1C1A24;
@@ -28,7 +28,7 @@
   --font-body: 'Manrope', -apple-system, system-ui, 'Segoe UI', sans-serif;
 }
 
-html, body { height: 100%; overflow: hidden; }
+html, body { height: 100%; height: 100dvh; overflow: hidden; }
 
 body {
   font-family: var(--font-body);
@@ -41,13 +41,15 @@ body {
   user-select: none;
 }
 
-input, select, textarea, button { font-family: inherit; font-size: 16px; }
+input, select, textarea, button { font-family: inherit; font-size: 16px; touch-action: manipulation; }
+
+.clickable { touch-action: manipulation; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
 
-#app { height: 100%; position: relative; overflow: hidden; }
+#app { height: 100%; height: 100dvh; position: relative; overflow: hidden; }
 
 .screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
@@ -115,6 +117,7 @@ input, select, textarea, button { font-family: inherit; font-size: 16px; }
   border-radius: var(--radius-sm); cursor: pointer; background: var(--surface);
   color: var(--text); min-height: 44px; min-width: 44px;
   transition: opacity 0.15s, transform 0.15s; position: relative;
+  touch-action: manipulation;
 }
 .calendar-day:active { opacity: 0.7; transform: scale(0.94); }
 .calendar-day.empty { background: transparent; cursor: default; }

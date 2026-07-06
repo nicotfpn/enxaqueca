@@ -27,6 +27,12 @@ export default async function handler(req, res) {
         if (!body || typeof body.intensidade !== 'number') {
           return res.status(400).json({ error: 'Dados inválidos' });
         }
+        if (body._idempotent) {
+          const existing = await redis.get(key);
+          if (existing && existing._idempotent === body._idempotent) {
+            return res.status(200).json({ ok: true, cached: true });
+          }
+        }
         await redis.set(key, {
           data: body.data || data,
           intensidade: body.intensidade,
@@ -41,7 +47,8 @@ export default async function handler(req, res) {
           foi_hospital: !!body.foi_hospital,
           impacto_dia: !!body.impacto_dia,
           teve_gatilho: !!body.teve_gatilho,
-          gatilho: body.gatilho || ''
+          gatilho: body.gatilho || '',
+          _idempotent: body._idempotent || ''
         });
         return res.status(200).json({ ok: true });
       }
